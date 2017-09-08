@@ -1,6 +1,6 @@
 # go-transport-queue
 
-Queue for transporting large batch of messages in specific interval and batch size.
+Queue for transporting large batch of messages with specific interval and batch size.
 
 # Usage
 
@@ -30,7 +30,7 @@ go-transport-queue --interval 1s --batch-size 10 --transport smtp
 
 You want to spread your notification load for FCM server to 1200 messages per minute:
 ```
-go-transport-queue --interval 1s --batch-size 20 --transport smtp
+go-transport-queue --interval 1s --batch-size 20 --transport fcm
 ```
 
 # Transports
