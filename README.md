@@ -33,11 +33,19 @@ You want to spread your notification load for FCM server to 1200 messages per mi
 go-transport-queue --interval 1s --batch-size 20 --transport fcm
 ```
 
-# Transports
+# Configuration
+
+## General
+
+* `transport,t` (envvar `TRANSPORT`, required) - type of transport
+* `batch-size,b` (envvar `BATCH_SIZE`, default `100`) - maximum number of messages per batch
+* `interval,i` (envvar `INTERVAL`, default `100ms`) - time interval between batches
+
+## Transports
 
 Transports handle parsing incoming request and message delivery. Currently 3 transport types are supported: `log`, `smtp`, `fcm`
 
-## log transport
+### log transport
 
 This is easy transport for debugging purposes. Request body:
 ```
@@ -46,7 +54,7 @@ This is easy transport for debugging purposes. Request body:
 }
 ```
 
-## smtp transport
+### smtp transport
 
 This is easy transport for debugging purposes. Request body:
 ```
@@ -61,7 +69,7 @@ Config variables:
 * `smtp-url` (envvar `SMTP_URL`) - SMTP configuration in url format
 * `smtp-sender` (envvar `SMTP_SENDER`) - sender of emails (rfc2047)
 
-## fcm transport
+### fcm transport
 
 Firebase Cloud Messaging transport. Request body:
 ```

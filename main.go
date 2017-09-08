@@ -52,11 +52,6 @@ func main() {
 			Name:   "fcm-api-key",
 			EnvVar: "FCM_API_KEY",
 		},
-		cli.IntFlag{
-			Name:   "fcm-recipients-batch-size,",
-			EnvVar: "FCM_RECIPIENT_BATCH_SIZE",
-			Value:  10,
-		},
 	}
 
 	app.Action = func(c *cli.Context) error {
