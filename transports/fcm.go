@@ -3,7 +3,6 @@ package transports
 import (
 	"encoding/gob"
 	"encoding/json"
-	"fmt"
 
 	"github.com/NaySoftware/go-fcm"
 	"github.com/beeker1121/goque"
@@ -68,7 +67,7 @@ func (t FCMTransport) SendMessages(messages []model.TransportMessage) error {
 }
 
 func (t FCMTransport) sendMessage(message FCMTransportMessage) error {
-	fmt.Println("send fcm", len(message.Recipients), message.Notification)
+	// fmt.Println("send fcm", len(message.Recipients), message.Notification)
 	client := fcm.NewFcmClient(t.apiKey)
 
 	client.NewFcmRegIdsMsg(message.Recipients, message.Data)
