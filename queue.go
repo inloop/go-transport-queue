@@ -38,3 +38,8 @@ func (q *Queue) Pop() (*model.TransportMessage, error) {
 	message, err := q.transport.DecodeMessage(item)
 	return &message, err
 }
+
+// Length ...
+func (q *Queue) Length() uint64 {
+	return q.queue.Length()
+}

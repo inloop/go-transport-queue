@@ -70,9 +70,10 @@ func main() {
 		d.start(c.Duration("interval"), c.Int("batch-size"))
 
 		srv := createHTTPServer(q, t, port)
-		fmt.Println("transport", c.String("transport"))
+		fmt.Println("transport:", c.String("transport"))
 		fmt.Println("batch size:", c.Int("batch-size"))
 		fmt.Println("interval:", c.Duration("interval"))
+		fmt.Println("queue length:", q.Length())
 		fmt.Println("listening on:", port)
 		if err := srv.ListenAndServe(); err != nil {
 			return cli.NewExitError(err, 1)

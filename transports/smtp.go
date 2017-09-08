@@ -80,6 +80,7 @@ func encodeRFC2047(String string) string {
 }
 
 func (t SMTPTransport) sendMessage(msg SMTPTransportMessage) error {
+	fmt.Println("Queue: sending smtp", msg.Recipients)
 	to := msg.Recipients
 
 	header := make(map[string]string)
