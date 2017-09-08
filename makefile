@@ -1,8 +1,8 @@
-install:
+build:
 	go get ./...
 	go build -o go-transport-queue
 
-deploy-local:
-	make install
+install:
+	make build
 	mv go-transport-queue /usr/local/bin/
 	chmod +x /usr/local/bin/go-transport-queue
