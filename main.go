@@ -41,6 +41,11 @@ func main() {
 			Value:  time.Second / 10,
 		},
 		cli.StringFlag{
+			Name:   "data-path",
+			EnvVar: "DATA_PATH",
+			Value:  "/data",
+		},
+		cli.StringFlag{
 			Name:   "smtp-url",
 			EnvVar: "SMTP_URL",
 		},
@@ -61,7 +66,7 @@ func main() {
 			return cli.NewExitError(err, 1)
 		}
 
-		q := NewQueue("data_dir", t)
+		q := NewQueue(c.String("data-path"), t)
 		// b := NewMessageBuffer(q, c.Int("batch-size"))
 		d := distributor{queue: q, transport: t}
 		port := c.String("api-port")

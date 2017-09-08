@@ -38,6 +38,7 @@ go-transport-queue --interval 1s --batch-size 20 --transport fcm
 ## General
 
 * `transport,t` (envvar `TRANSPORT`, required) - type of transport
+* `data-path` (envvar `DATA_PATH`, default `/data`) - data storage location
 * `batch-size,b` (envvar `BATCH_SIZE`, default `100`) - maximum number of messages per batch
 * `interval,i` (envvar `INTERVAL`, default `100ms`) - time interval between batches
 
@@ -94,3 +95,15 @@ Firebase Cloud Messaging transport. Request body:
 
 Config variables:
 * `fcm-api-key` (envvar `FCM_API_KEY`) - Google FCM Api Key
+
+# Docker
+
+You can start container by running:
+```
+docker run --rm -p 3000:80 -v /path/to/data:/data go-transport-queue --transport log --batch-size 10 --interval 1s
+```
+
+Or by specifying environment variables:
+```
+docker run --rm -p 3000:80 -e TRANSPORT=log -e BATCH_SIZE=10 -e INTERVAL=1s -v /path/to/data:/data go-transport-queue
+```
