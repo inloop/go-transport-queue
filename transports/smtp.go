@@ -3,6 +3,7 @@ package transports
 import (
 	"encoding/gob"
 	"encoding/json"
+	"fmt"
 	"net/mail"
 	"net/url"
 	"strconv"
@@ -75,6 +76,8 @@ func (t SMTPTransport) SendMessages(messages []model.TransportMessage) error {
 }
 
 func (t SMTPTransport) sendMessage(msg SMTPTransportMessage) error {
+	fmt.Println("Queue: sending smpt", msg.Recipients)
+
 	m := gomail.NewMessage()
 	m.SetHeader("From", t.sender.String())
 	m.SetHeader("To", msg.Recipients...)
