@@ -62,7 +62,8 @@ This is easy transport for debugging purposes. Request body:
 {
   "recipients":["john.doe@example.com"],
 	"subject":"Test email",
-	"message":"Hello from mail queue"
+	"text":"Hello from mail queue"
+	"html":"<b>Hello</b> from mail queue"
 }
 ```
 
