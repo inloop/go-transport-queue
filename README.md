@@ -60,7 +60,8 @@ This is easy transport for debugging purposes. Request body:
 This is easy transport for debugging purposes. Request body:
 ```
 {
-  "recipients":["john.doe@example.com"],
+  "from":"no-reply@example.com",
+  "to":["john.doe@example.com"],
 	"subject":"Test email",
 	"text":"Hello from mail queue"
 	"html":"<b>Hello</b> from mail queue"
@@ -77,7 +78,9 @@ Firebase Cloud Messaging transport. Request body:
 ```
 {
 	"recipients":["fcm_token1","fcm_token2"],
-	"data":{"xx":"aa"},
+	"data":{
+    "xx":"aa"
+  },
 	"notification":{
     "title":"transport queue",
     "body":"hello world",

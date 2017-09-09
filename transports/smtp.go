@@ -76,11 +76,11 @@ func (t SMTPTransport) SendMessages(messages []model.TransportMessage) error {
 }
 
 func (t SMTPTransport) sendMessage(msg SMTPTransportMessage) error {
-	fmt.Println("Queue: sending smpt", msg.Recipients)
+	fmt.Println("Queue: sending smpt", msg.To)
 
 	m := gomail.NewMessage()
-	m.SetHeader("From", t.sender.String())
-	m.SetHeader("To", msg.Recipients...)
+	m.SetHeader("From", msg.From)
+	m.SetHeader("To", msg.To...)
 	m.SetHeader("Subject", msg.Subject)
 	m.SetBody("text/plain", msg.Text)
 	m.SetBody("text/html", msg.HTML)
@@ -97,10 +97,11 @@ func (t SMTPTransport) DecodeMessage(i *goque.PriorityItem) (model.TransportMess
 
 // SMTPTransportMessage ...
 type SMTPTransportMessage struct {
-	Recipients []string `json:"recipients"`
-	Subject    string   `json:"subject"`
-	Text       string   `json:"text"`
-	HTML       string   `json:"html"`
+	From    string   `json:"from"`
+	To      []string `json:"to"`
+	Subject string   `json:"subject"`
+	Text    string   `json:"text"`
+	HTML    string   `json:"html"`
 }
 
 // Validate ...
