@@ -13,7 +13,7 @@ Then you can push messages to REST api:
 ```
 curl -X POST \
   http://hostname:3000/push \
-  -H 'content-type: application/json' \
+  -H 'cont ent-type: application/json' \
   -d '{
 	"recipients":["john.doe@example.com"],
 	"subject":"Test email",
@@ -85,7 +85,6 @@ This is easy transport for debugging purposes. Request body:
 
 Config variables:
 * `smtp-url` (envvar `SMTP_URL`) - SMTP configuration in url format
-* `smtp-sender` (envvar `SMTP_SENDER`) - sender of emails (rfc2047)
 
 ### fcm transport
 

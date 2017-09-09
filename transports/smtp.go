@@ -3,7 +3,6 @@ package transports
 import (
 	"encoding/gob"
 	"fmt"
-	"net/mail"
 	"net/url"
 	"strconv"
 
@@ -15,7 +14,7 @@ import (
 )
 
 // NewSMTPTransport ...
-func NewSMTPTransport(urlString, sender string) SMTPTransport {
+func NewSMTPTransport(urlString string) SMTPTransport {
 
 	gob.Register(SMTPTransportMessage{})
 	URL, _ := url.Parse(urlString)
@@ -38,20 +37,14 @@ func NewSMTPTransport(urlString, sender string) SMTPTransport {
 		port = int(portValue)
 	}
 
-	_sender, err := mail.ParseAddress(sender)
-	if err != nil {
-		panic(err)
-	}
-
 	d := gomail.NewDialer(host, port, username, password)
 
-	return SMTPTransport{dialer: d, sender: *_sender}
+	return SMTPTransport{dialer: d}
 }
 
 // SMTPTransport ...
 type SMTPTransport struct {
 	dialer *gomail.Dialer
-	sender mail.Address
 }
 
 // BindResponse ...
