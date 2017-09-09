@@ -5,7 +5,6 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
-	"log"
 	"mime"
 	"net/mail"
 	"net/smtp"
@@ -66,7 +65,6 @@ func (t SMTPTransport) DecodeMessages(d *json.Decoder) ([]model.TransportMessage
 func (t SMTPTransport) SendMessages(messages []model.TransportMessage) error {
 	for _, message := range messages {
 		m := message.(SMTPTransportMessage)
-		log.Println(m.Message)
 		if err := t.sendMessage(m); err != nil {
 			return err
 		}
@@ -95,7 +93,7 @@ func (t SMTPTransport) sendMessage(msg SMTPTransportMessage) error {
 	for k, v := range header {
 		message += fmt.Sprintf("%s: %s\r\n", k, v)
 	}
-	message += "\r\n" + base64.StdEncoding.EncodeToString([]byte(msg.Message))
+	message += "\r\n" + base64.StdEncoding.EncodeToString([]byte(msg.Text))
 
 	port := t.url.Port()
 	if port == "" {
@@ -115,7 +113,8 @@ func (t SMTPTransport) DecodeMessage(i *goque.PriorityItem) (model.TransportMess
 type SMTPTransportMessage struct {
 	Recipients []string `json:"recipients"`
 	Subject    string   `json:"subject"`
-	Message    string   `json:"message"`
+	Text       string   `json:"text"`
+	HTML       string   `json:"html"`
 }
 
 // Validate ...
