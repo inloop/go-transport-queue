@@ -2,7 +2,6 @@ package transports
 
 import (
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
 	"net/mail"
 	"net/url"
@@ -11,6 +10,7 @@ import (
 	gomail "gopkg.in/gomail.v2"
 
 	"github.com/beeker1121/goque"
+	"github.com/gin-gonic/gin"
 	"github.com/inloop/go-transport-queue/model"
 )
 
@@ -54,10 +54,10 @@ type SMTPTransport struct {
 	sender mail.Address
 }
 
-// DecodeMessages ...
-func (t SMTPTransport) DecodeMessages(d *json.Decoder) ([]model.TransportMessage, error) {
+// BindResponse ...
+func (t SMTPTransport) BindResponse(c *gin.Context) ([]model.TransportMessage, error) {
 	var message SMTPTransportMessage
-	err := d.Decode(&message)
+	err := c.Bind(&message)
 	if err != nil {
 		return []model.TransportMessage{message}, err
 	}

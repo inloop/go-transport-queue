@@ -21,6 +21,21 @@ curl -X POST \
 }'
 ```
 
+## Priority
+
+You can prioritize messages by providing `?priority=N` (default: `0`). Messages are sorted by priority in descending order.
+
+```
+curl -X POST \
+  http://hostname:3000/push?priority=5 \
+  -H 'content-type: application/json' \
+  -d '{
+	"recipients":["john.doe@example.com"],
+	"subject":"Test email",
+	"message":"Hello from mail queue"
+}'
+```
+
 # Use cases
 
 You have SMTP server with port throttling and you can send 10 messages per second.

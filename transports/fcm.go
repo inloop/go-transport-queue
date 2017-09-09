@@ -2,11 +2,11 @@ package transports
 
 import (
 	"encoding/gob"
-	"encoding/json"
 	"fmt"
 
 	"github.com/NaySoftware/go-fcm"
 	"github.com/beeker1121/goque"
+	"github.com/gin-gonic/gin"
 	"github.com/inloop/go-transport-queue/model"
 	uuid "github.com/satori/go.uuid"
 )
@@ -24,11 +24,11 @@ type FCMTransport struct {
 	apiKey string
 }
 
-// DecodeMessages ...
-func (t FCMTransport) DecodeMessages(d *json.Decoder) ([]model.TransportMessage, error) {
+// BindResponse ...
+func (t FCMTransport) BindResponse(c *gin.Context) ([]model.TransportMessage, error) {
 	result := []model.TransportMessage{}
 	var message FCMTransportMessage
-	err := d.Decode(&message)
+	err := c.Bind(&message)
 	if err != nil {
 		return result, err
 	}

@@ -2,11 +2,11 @@ package transports
 
 import (
 	"encoding/gob"
-	"encoding/json"
 	"errors"
 	"log"
 
 	"github.com/beeker1121/goque"
+	"github.com/gin-gonic/gin"
 	"github.com/inloop/go-transport-queue/model"
 )
 
@@ -20,10 +20,11 @@ func NewLogTransport() LogTransport {
 type LogTransport struct {
 }
 
-// DecodeMessages ...
-func (t LogTransport) DecodeMessages(d *json.Decoder) ([]model.TransportMessage, error) {
+// BindResponse ...
+func (t LogTransport) BindResponse(c *gin.Context) ([]model.TransportMessage, error) {
 	var message LogTransportMessage
-	err := d.Decode(&message)
+
+	err := c.Bind(&message)
 	if err != nil {
 		return []model.TransportMessage{message}, err
 	}

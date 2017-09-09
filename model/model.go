@@ -1,14 +1,13 @@
 package model
 
 import (
-	"encoding/json"
-
 	"github.com/beeker1121/goque"
+	"github.com/gin-gonic/gin"
 )
 
 // Transport ...
 type Transport interface {
-	DecodeMessages(d *json.Decoder) ([]TransportMessage, error)
+	BindResponse(c *gin.Context) ([]TransportMessage, error)
 	SendMessages(messages []TransportMessage) error
 	DecodeMessage(i *goque.PriorityItem) (TransportMessage, error)
 }
