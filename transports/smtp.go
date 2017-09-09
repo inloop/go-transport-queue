@@ -1,15 +1,13 @@
 package transports
 
 import (
-	"encoding/base64"
 	"encoding/gob"
 	"encoding/json"
-	"fmt"
-	"mime"
 	"net/mail"
-	"net/smtp"
 	"net/url"
-	"strings"
+	"strconv"
+
+	gomail "gopkg.in/gomail.v2"
 
 	"github.com/beeker1121/goque"
 	"github.com/inloop/go-transport-queue/model"
@@ -17,6 +15,7 @@ import (
 
 // NewSMTPTransport ...
 func NewSMTPTransport(urlString, sender string) SMTPTransport {
+
 	gob.Register(SMTPTransportMessage{})
 	URL, _ := url.Parse(urlString)
 
@@ -33,22 +32,25 @@ func NewSMTPTransport(urlString, sender string) SMTPTransport {
 	if pass, exists := URL.User.Password(); exists == true {
 		password = pass
 	}
-	identity := ""
-	auth := smtp.PlainAuth(identity, username, password, host)
+	port := 25
+	if portValue, err := strconv.ParseInt(URL.Port(), 10, 32); err == nil {
+		port = int(portValue)
+	}
 
 	_sender, err := mail.ParseAddress(sender)
 	if err != nil {
 		panic(err)
 	}
 
-	return SMTPTransport{auth: auth, url: *URL, sender: *_sender}
+	d := gomail.NewDialer(host, port, username, password)
+
+	return SMTPTransport{dialer: d, sender: *_sender}
 }
 
 // SMTPTransport ...
 type SMTPTransport struct {
-	auth   smtp.Auth
+	dialer *gomail.Dialer
 	sender mail.Address
-	url    url.URL
 }
 
 // DecodeMessages ...
@@ -72,34 +74,15 @@ func (t SMTPTransport) SendMessages(messages []model.TransportMessage) error {
 	return nil
 }
 
-func encodeRFC2047(String string) string {
-	// use mail's rfc2047 to encode any string
-	return mime.QEncoding.Encode("utf-8", String)
-}
-
 func (t SMTPTransport) sendMessage(msg SMTPTransportMessage) error {
-	fmt.Println("Queue: sending smtp", msg.Recipients)
-	to := msg.Recipients
-
-	header := make(map[string]string)
-	header["From"] = t.sender.String()
-	header["To"] = strings.Join(msg.Recipients, ",")
-	header["Subject"] = encodeRFC2047(msg.Subject)
-	header["MIME-Version"] = "1.0"
-	header["Content-Type"] = "text/plain; charset=\"utf-8\""
-	header["Content-Transfer-Encoding"] = "base64"
-
-	message := ""
-	for k, v := range header {
-		message += fmt.Sprintf("%s: %s\r\n", k, v)
-	}
-	message += "\r\n" + base64.StdEncoding.EncodeToString([]byte(msg.Text))
-
-	port := t.url.Port()
-	if port == "" {
-		port = "25"
-	}
-	return smtp.SendMail(t.url.Hostname()+":"+port, t.auth, t.sender.Address, to, []byte(message))
+	m := gomail.NewMessage()
+	m.SetHeader("From", t.sender.String())
+	m.SetHeader("To", msg.Recipients...)
+	m.SetHeader("Subject", msg.Subject)
+	m.SetBody("text/plain", msg.Text)
+	m.SetBody("text/html", msg.HTML)
+	// m.Attach("/home/Alex/lolcat.jpg")
+	return t.dialer.DialAndSend(m)
 }
 
 // DecodeMessage ...
