@@ -6,6 +6,7 @@ import (
 	"net/mail"
 	"net/url"
 	"strconv"
+	"strings"
 
 	gomail "gopkg.in/gomail.v2"
 
@@ -27,7 +28,7 @@ func NewSMTPTransport(urlString string) SMTPTransport {
 		panic("user credentials not provided")
 	}
 
-	host := URL.Host
+	host := strings.Split(URL.Host, ":")[0]
 	username := URL.User.Username()
 	password := ""
 	if pass, exists := URL.User.Password(); exists == true {
