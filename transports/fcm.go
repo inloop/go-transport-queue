@@ -33,7 +33,7 @@ func (t FCMTransport) BindResponse(c *gin.Context) ([]model.TransportMessage, er
 		return result, err
 	}
 
-	groupID := uuid.NewV4().String()
+	groupID := uuid.Must(uuid.NewV4()).String()
 	recipients := message.Recipients
 	for _, recipient := range recipients {
 		message.Recipients = []string{recipient}

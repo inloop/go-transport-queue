@@ -16,7 +16,7 @@ import (
 )
 
 // NewSMTPTransport ...
-func NewSMTPTransport(urlString string) SMTPTransport {
+func NewSMTPTransport(urlString, sender string) SMTPTransport {
 
 	gob.Register(SMTPTransportMessage{})
 	URL, _ := url.Parse(urlString)
@@ -41,12 +41,15 @@ func NewSMTPTransport(urlString string) SMTPTransport {
 
 	d := gomail.NewDialer(host, port, username, password)
 
-	return SMTPTransport{dialer: d}
+	transport := SMTPTransport{dialer: d}
+	transport.sender = sender
+	return transport
 }
 
 // SMTPTransport ...
 type SMTPTransport struct {
 	dialer *gomail.Dialer
+	sender string
 }
 
 // BindResponse ...
@@ -66,6 +69,7 @@ func (t SMTPTransport) SendMessages(messages []model.TransportMessage) error {
 		if err := t.sendMessage(m); err != nil {
 			return err
 		}
+		fmt.Println("message sent")
 	}
 	return nil
 }
@@ -73,7 +77,12 @@ func (t SMTPTransport) SendMessages(messages []model.TransportMessage) error {
 func (t SMTPTransport) sendMessage(msg SMTPTransportMessage) error {
 	fmt.Println("Queue: sending smpt", msg.To)
 
-	address, err := mail.ParseAddress(msg.From)
+	sender := msg.From
+	if sender == "" {
+		sender = t.sender
+	}
+
+	address, err := mail.ParseAddress(sender)
 	if err != nil {
 		return err
 	}

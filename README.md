@@ -5,20 +5,18 @@ Queue for transporting large batch of messages with specific interval and batch 
 # Usage
 
 For SMTP transport queue:
+
 ```
-go-transport-queue --port 3000 --interval 1s --batch-size 10 --transport smtp
+go-transport-queue --port 3000 --interval 1s --batch-size 10 --transport smtp --smtp-url smpt://user:pass@example.com:25 --smpt-sender no-reply@example.com
 ```
 
 Then you can push messages to REST api:
+
 ```
 curl -X POST \
-  http://hostname:3000/push \
-  -H 'cont ent-type: application/json' \
-  -d '{
-	"recipients":["john.doe@example.com"],
-	"subject":"Test email",
-	"message":"Hello from mail queue"
-}'
+  http://localhost:3000/push \
+  -H 'content-type: application/json' \
+  -d '{"recipients":["john.doe@example.com"],"subject":"Test email","message":"Hello from mail queue"}'
 ```
 
 ## Priority
@@ -39,11 +37,13 @@ curl -X POST \
 # Use cases
 
 You have SMTP server with port throttling and you can send 10 messages per second.
+
 ```
 go-transport-queue --interval 1s --batch-size 10 --transport smtp
 ```
 
 You want to spread your notification load for FCM server to 1200 messages per minute:
+
 ```
 go-transport-queue --interval 1s --batch-size 20 --transport fcm
 ```
@@ -64,6 +64,7 @@ Transports handle parsing incoming request and message delivery. Currently 3 tra
 ### log transport
 
 This is easy transport for debugging purposes. Request body:
+
 ```
 {
   "message":"log message"
@@ -73,6 +74,7 @@ This is easy transport for debugging purposes. Request body:
 ### smtp transport
 
 This is easy transport for debugging purposes. Request body:
+
 ```
 {
   "from":"no-reply@example.com",
@@ -84,11 +86,13 @@ This is easy transport for debugging purposes. Request body:
 ```
 
 Config variables:
+
 * `smtp-url` (envvar `SMTP_URL`) - SMTP configuration in url format
 
 ### fcm transport
 
 Firebase Cloud Messaging transport. Request body:
+
 ```
 {
 	"recipients":["fcm_token1","fcm_token2"],
@@ -112,16 +116,19 @@ Firebase Cloud Messaging transport. Request body:
 ```
 
 Config variables:
+
 * `fcm-api-key` (envvar `FCM_API_KEY`) - Google FCM Api Key
 
 # Docker
 
 You can start container by running:
+
 ```
 docker run --rm -p 3000:80 -v /path/to/data:/data go-transport-queue --transport log --batch-size 10 --interval 1s
 ```
 
 Or by specifying environment variables:
+
 ```
 docker run --rm -p 3000:80 -e TRANSPORT=log -e BATCH_SIZE=10 -e INTERVAL=1s -v /path/to/data:/data go-transport-queue
 ```

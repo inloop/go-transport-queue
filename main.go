@@ -102,7 +102,7 @@ func getTransport(transport string, c *cli.Context) (model.Transport, error) {
 		if url == "" {
 			return t, MissingVariableError{VariableName: "SMTP_URL"}
 		}
-		t = transports.NewSMTPTransport(url)
+		t = transports.NewSMTPTransport(url, c.String("smtp-sender"))
 	case "fcm":
 		apiKey := c.String("fcm-api-key")
 
